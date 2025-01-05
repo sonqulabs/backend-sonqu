@@ -1,0 +1,11 @@
+meta {
+  name: removeCategoryGroup
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{BACKEND_URL}}/category-group/6
+  body: json
+  auth: bearer
+}

@@ -1,0 +1,185 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// datasource db {
+//   provider = "sqlite"
+//   url      = env("DATABASE_URL")
+// }
+
+enum RecipeDifficulty {
+  facil
+  medio
+  dificil
+}
+
+model Recipe {
+  id              Int              @id @default(autoincrement())
+  title           String
+  description     String
+  imageUrl        String?
+  videoUrl        String?
+  prepTime        Int
+  servings        Int
+  difficulty      RecipeDifficulty @default(medio)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  userId          Int?
+  user            User?            @relation(fields: [userId], references: [id])
+  // publicUserId    Int
+  // publicUser      PublicUsers @relation(fields: [publicUserId], references: [id])
+  publicUserName  String?
+  publicUserPhone String?
+
+  categories   RecipeCategory[]
+  ingredients  RecipeIngredient[]
+  instructions RecipeInstruction[]
+
+  @@index([title, difficulty])
+}
+
+model RecipeInstruction {
+  id          Int    @id @default(autoincrement())
+  // instructionOrder Int
+  description String
+
+  recipeId Int
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  // complementType   String?
+
+  // @@index([recipeId])
+}
+
+model RecipeIngredient {
+  id       Int    @id @default(autoincrement())
+  name     String
+  recipeId Int
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  // @@id([recipeId])
+}
+
+model CategoryGroup {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  Category Category[]
+}
+
+model Category {
+  id                    Int                     @id @default(autoincrement())
+  name                  String                  @unique
+  groupId               Int
+  group                 CategoryGroup           @relation(fields: [groupId], references: [id])
+  recipes               RecipeCategory[]
+  // PendingRecipeCategory PendingRecipeCategory[]
+  PendingRecipeCategory PendingRecipeCategory[]
+}
+
+model RecipeCategory {
+  recipeId   Int
+  categoryId Int
+  recipe     Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@id([recipeId, categoryId])
+}
+
+enum UserState {
+  active
+  disable
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  username   String    @unique
+  email      String?   @unique
+  phone      String    @unique
+  password   String
+  state      UserState @default(active)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+  roleId     Int
+  role       Role      @relation(fields: [roleId], references: [id])
+  identifier String?   @unique
+
+  recipes       Recipe[]
+  PendingRecipe PendingRecipe[]
+}
+
+model Role {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  permission Json     @default("[]")
+  identifier String?  @unique
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  user User[]
+}
+
+/////////PENDING
+model PendingRecipe {
+  id              Int              @id @default(autoincrement())
+  title           String
+  description     String
+  imageUrl        String?
+  videoUrl        String?
+  prepTime        Int
+  servings        Int
+  difficulty      RecipeDifficulty @default(medio)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  userId          Int?
+  user            User?            @relation(fields: [userId], references: [id])
+  publicUserName  String?
+  publicUserPhone String?
+
+  status String @default("pending")
+
+  pendingCategories   PendingRecipeCategory[]
+  pendingIngredients  PendingRecipeIngredient[]
+  pendingInstructions PendingRecipeInstruction[]
+}
+
+model PendingRecipeInstruction {
+  id          Int           @id @default(autoincrement())
+  recipeId    Int
+  recipe      PendingRecipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  // instructionOrder Int
+  description String
+  // complementType   String?
+
+  // @@index([recipeId])
+}
+
+model PendingRecipeIngredient {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  recipeId Int
+  recipe   PendingRecipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  // @@id([pendingRecipeId, pendingIngredientId])
+}
+
+model PendingRecipeCategory {
+  pendingRecipeId   Int
+  pendingCategoryId Int
+
+  pendingRecipe   PendingRecipe @relation(fields: [pendingRecipeId], references: [id], onDelete: Cascade)
+  pendingCategory Category      @relation(fields: [pendingCategoryId], references: [id])
+
+  @@id([pendingRecipeId, pendingCategoryId])
+}

@@ -1,0 +1,15 @@
+meta {
+  name: removeRecipe
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{BACKEND_URL}}/recipe/62
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}

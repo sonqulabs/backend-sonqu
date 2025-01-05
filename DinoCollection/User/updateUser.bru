@@ -1,0 +1,26 @@
+meta {
+  name: updateUser
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{BACKEND_URL}}/user/11
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "username": "dinosaurioGrande",
+    "email": "dinosaurio@gmail.com",
+    "phone": "9991432",
+    "password": "dinosaurio",
+    "state": "active",
+    "roleId": 7
+  }
+}

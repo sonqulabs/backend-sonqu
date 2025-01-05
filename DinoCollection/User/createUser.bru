@@ -1,0 +1,27 @@
+meta {
+  name: createUser
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BACKEND_URL}}/user
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "id":26,
+    "username": "zzzzz",
+    "email": "zzzzz@gmail.com",
+    "phone": "98645644",
+    "password": "dududu",
+    "state": "active",
+    "roleId": 8
+  }
+}

@@ -1,0 +1,20 @@
+meta {
+  name: removeRole
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{BACKEND_URL}}/role/10?deleteCascade=true
+  body: none
+  auth: bearer
+}
+
+params:query {
+  deleteCascade: true
+  ~reassignTo: 7
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}

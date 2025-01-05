@@ -1,0 +1,78 @@
+meta {
+  name: updateRole
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{BACKEND_URL}}/role/8
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "id":8,
+    "name":"roledinosaurio",
+    "permission": [
+      {
+        "name": "recipe",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "recipe-pending",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "role",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "user",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "category",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "category-group",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      }
+    ]
+  }
+}

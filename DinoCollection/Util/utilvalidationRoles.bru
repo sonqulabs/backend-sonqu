@@ -1,0 +1,77 @@
+meta {
+  name: utilvalidationRoles
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{BACKEND_URL}}/role/validacion-role
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "name":"dinooa",
+    "permission": [
+      {
+        "name": "recipe",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "recipe-pending",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "role",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "users",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "category",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "category-group",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      }
+    ]
+  }
+}

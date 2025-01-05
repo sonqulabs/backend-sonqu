@@ -1,0 +1,15 @@
+meta {
+  name: getCategoryGroupById
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{BACKEND_URL}}/category-group/2
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}

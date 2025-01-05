@@ -1,0 +1,20 @@
+meta {
+  name: findMatches
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{BACKEND_URL}}/search/matches/?query=undefined&categories=Entrada
+  body: none
+  auth: bearer
+}
+
+params:query {
+  query: undefined
+  categories: Entrada
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}

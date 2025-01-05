@@ -1,0 +1,78 @@
+meta {
+  name: createRole
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BACKEND_URL}}/role
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "id":11,
+    "name":"nombredepermisoyy",
+    "permission": [
+      {
+        "name": "recipe",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "recipe-pending",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "role",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "user",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "category",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      },
+      {
+        "name": "category-group",
+        "permission": {
+          "create": true,
+          "delete": true,
+          "find": true,
+          "update": true
+        }
+      }
+    ]
+  }
+}

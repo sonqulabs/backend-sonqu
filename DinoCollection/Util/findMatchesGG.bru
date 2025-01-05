@@ -1,0 +1,19 @@
+meta {
+  name: findMatchesGG
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{BACKEND_URL}}/search/matchesGG/?query=
+  body: none
+  auth: bearer
+}
+
+params:query {
+  query: 
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}

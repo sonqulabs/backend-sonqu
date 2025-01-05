@@ -1,0 +1,15 @@
+meta {
+  name: removeCategory
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{BACKEND_URL}}/category/13
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
