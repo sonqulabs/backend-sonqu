@@ -6,6 +6,10 @@ meta {
 
 delete {
   url: {{BACKEND_URL}}/category-group/6
-  body: json
+  body: none
   auth: bearer
+}
+
+auth:bearer {
+  token: {{bearerToken}}
 }
