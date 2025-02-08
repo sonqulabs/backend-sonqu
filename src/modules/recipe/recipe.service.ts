@@ -22,28 +22,36 @@ export class RecipeService {
       const recipeRes = await this.prisma.recipe.create({
         data: {
           ...recipe,
-          categories: {
-            create: recipe.categories.map((categoryId) => ({
-              category: { connect: { id: categoryId } },
-            })),
-          },
-          ingredients: {
-            create: [
-              {
-                name: recipe.ingredients,
-              },
-            ],
 
-            // recipe.ingredients.map((ingredient) => ({
-            //   name: ingredient,
-            // ingredient: { connect: { id: ingredient.id } },
-            // quantity: ingredient.quantity,
-            // unit: ingredient.unit,
-            // })),
-          },
-          instructions: {
-            create: [{ description: recipe.instructions }],
-          },
+          ...(recipe.categories && {
+            categories: {
+              create: recipe.categories.map((categoryId) => ({
+                category: { connect: { id: categoryId } },
+              })),
+            },
+          }),
+
+          ...(recipe.ingredients && {
+            ingredients: {
+              create: [
+                {
+                  name: recipe.ingredients,
+                },
+              ],
+            },
+          }),
+
+          // recipe.ingredients.map((ingredient) => ({
+          //   name: ingredient,
+          // ingredient: { connect: { id: ingredient.id } },
+          // quantity: ingredient.quantity,
+          // unit: ingredient.unit,
+          // })),
+          ...(recipe.instructions && {
+            instructions: {
+              create: [{ description: recipe.instructions }],
+            },
+          }),
         },
       });
 
@@ -137,36 +145,44 @@ export class RecipeService {
         data: {
           ...recipe,
 
-          categories: {
-            deleteMany: {},
-            create: recipe.categories.map((categoryId) => ({
-              category: { connect: { id: categoryId } },
-            })),
-          },
+          ...(recipe.categories && {
+            categories: {
+              deleteMany: {},
+              create: recipe.categories.map((categoryId) => ({
+                category: { connect: { id: categoryId } },
+              })),
+            },
+          }),
           // ingredients: undefined,
           // instructions: undefined,
-          ingredients: {
-            deleteMany: {},
-            create: [
-              {
-                name: recipe.ingredients,
-              },
-            ],
-          },
-          instructions: {
-            deleteMany: {},
-            // where: {},
-            create: [{ description: recipe.instructions }],
-            // update: [{ description: recipe.instructions }],
-          },
+          ...(recipe.ingredients && {
+            ingredients: {
+              deleteMany: {},
+              create: [
+                {
+                  name: recipe.ingredients,
+                },
+              ],
+            },
+          }),
+
+          ...(recipe.instructions && {
+            instructions: {
+              deleteMany: {},
+              // where: {},
+              create: [{ description: recipe.instructions }],
+              // update: [{ description: recipe.instructions }],
+            },
+          }),
         },
       });
 
       return recipeRes;
     } catch (error) {
       //No in production messague :V error.meta.cause
+      this.uploadImageService.deleteThumbnails(recipe.imageUrl);
       // console.log(error);
-      throw new BadRequestException(error.meta.cause);
+      throw new BadRequestException('Error updating recipe');
     }
   }
   // async findOne(id: number): Promise<Recipe> {
