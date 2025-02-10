@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -35,14 +36,21 @@ export class RecipeController {
     @UploadedFile() file,
     @Body() createRecipeDto: CreateRecipeDto,
   ) {
-    const resultData = await this.uploadImageService.createThumbnails(
-      file.buffer,
-    );
-    const recipeWithImageUrl = {
+    let recipeWithImageUrl: any = {
       ...createRecipeDto,
-      imageUrl: resultData.name,
       userId: request.user.userId,
     };
+
+    if (file?.buffer) {
+      const resultData = await this.uploadImageService.createThumbnails(
+        file.buffer,
+      );
+      recipeWithImageUrl = {
+        ...createRecipeDto,
+        imageUrl: resultData.name,
+      };
+    }
+
     return await this.recipeService.createRecipe(recipeWithImageUrl);
   }
 
@@ -74,14 +82,18 @@ export class RecipeController {
     //   recipe.imageUrl,
     //   file.buffer,
     // );
-    const resultData = await this.uploadImageService.createThumbnails(
-      file.buffer,
-    );
+    let recipeWithImageUrl: any = updateRecipeDto;
 
-    const recipeWithImageUrl = {
-      ...updateRecipeDto,
-      imageUrl: resultData.name,
-    };
+    if (file?.buffer) {
+      const resultData = await this.uploadImageService.createThumbnails(
+        file.buffer,
+      );
+
+      recipeWithImageUrl = {
+        ...updateRecipeDto,
+        imageUrl: resultData.name,
+      };
+    }
 
     const data = await this.recipeService.update(+id, recipeWithImageUrl);
 
